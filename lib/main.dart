@@ -42,6 +42,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
     });
   }
 
+  void _deleteTask(int index) {
+    setState(() {
+      _tasks.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,19 +80,27 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   : ListView.builder(
                       itemCount: _tasks.length,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: Checkbox(
-                            value: _tasks[index].isCompleted,
-                            onChanged: (bool? value) {
-                              _toggleTaskCompletion(index);
-                            },
-                          ),
-                          title: Text(
-                            _tasks[index].name,
-                            style: TextStyle(
-                              decoration: _tasks[index].isCompleted
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
+                        return Card(
+                          child: ListTile(
+                            leading: Checkbox(
+                              value: _tasks[index].isCompleted,
+                              onChanged: (bool? value) {
+                                _toggleTaskCompletion(index);
+                              },
+                            ),
+                            title: Text(
+                              _tasks[index].name,
+                              style: TextStyle(
+                                decoration: _tasks[index].isCompleted
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                              ),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                _deleteTask(index);
+                              },
                             ),
                           ),
                         );
