@@ -37,6 +37,16 @@ task_management_app/
 - Task Completion and Deletion: Each task in the list has a checkbox for marking it as complete or incomplete, and an icon button to delete the task.
 - Add Task Priority: Users can assign a priority (Low, Medium, High) when adding a task. Tasks are automatically sorted by priority.
 
+## Result Images:
+<div>
+  <img src="Images/output1.jpg" width="300"  alt = "Home Page"/> &nbsp;&nbsp;
+  <img src="Images/output2.jpg" width="300"  alt = "Importance Level"/>
+</div>
+<div>
+  <img src="Images/output3.jpg" width="300"  alt = "Tasks list"/> &nbsp;&nbsp;
+  <img src="Images/output4.jpg" width="300"  alt = "Tasks completed lists"/>
+</div>
+
 ## 🚀 How to Run the App
 1. Clone the repository:
   ```bash
@@ -59,19 +69,3 @@ This project includes an extra feature where users can assign priority to tasks 
 - 🗓️ Add due dates to tasks.
 - 💾 Implement persistent storage (e.g., SQLite, SharedPreferences) to save tasks between app sessions.
 - 🔔 Add notifications for high-priority tasks.
-<!-- # task_management_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference. -->
