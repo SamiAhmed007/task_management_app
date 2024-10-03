@@ -61,7 +61,19 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 ),
               ],
             ),
-            // Placeholder for task list
+            SizedBox(height: 20),
+            Expanded(
+              child: _tasks.isEmpty
+                  ? Center(child: Text('No tasks added yet'))
+                  : ListView.builder(
+                      itemCount: _tasks.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(_tasks[index].name),
+                        );
+                      },
+                    ),
+            ),
           ],
         ),
       ),
