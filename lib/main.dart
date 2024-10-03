@@ -18,19 +18,16 @@ class TaskManagementApp extends StatelessWidget {
   }
 }
 
-class TaskListScreen extends StatefulWidget {
-  @override
-  _TaskListScreenState createState() => _TaskListScreenState();
-}
-
 class _TaskListScreenState extends State<TaskListScreen> {
   final TextEditingController _taskController = TextEditingController();
   List<Task> _tasks = [];
+  String _selectedPriority = 'Low'; // Default priority
 
   void _addTask() {
     if (_taskController.text.isNotEmpty) {
       setState(() {
-        _tasks.add(Task(name: _taskController.text));
+        _tasks.add(Task(name: _taskController.text, priority: _selectedPriority));
+        _tasks.sort((a, b) => _comparePriority(a.priority, b.priority)); // Sorting tasks by priority
         _taskController.clear();
       });
     }
@@ -46,6 +43,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
     setState(() {
       _tasks.removeAt(index);
     });
+  }
+
+  int _comparePriority(String priorityA, String priorityB) {
+    // Define priority levels
+    const priorityOrder = ['High', 'Medium', 'Low'];
+    return priorityOrder.indexOf(priorityA).compareTo(priorityOrder.indexOf(priorityB));
   }
 
   @override
@@ -65,6 +68,20 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     controller: _taskController,
                     decoration: InputDecoration(labelText: 'Enter Task'),
                   ),
+                ),
+                DropdownButton<String>(
+                  value: _selectedPriority,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedPriority = newValue!;
+                    });
+                  },
+                  items: ['Low', 'Medium', 'High'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                 ),
                 SizedBox(width: 10),
                 ElevatedButton(
@@ -96,6 +113,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                     : TextDecoration.none,
                               ),
                             ),
+                            subtitle: Text('Priority: ${_tasks[index].priority}'),
                             trailing: IconButton(
                               icon: Icon(Icons.delete),
                               onPressed: () {
