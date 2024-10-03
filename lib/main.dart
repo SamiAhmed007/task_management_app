@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'models/task.dart';
+import 'models/task.dart'; // Import the task model
 
 void main() {
   runApp(TaskManagementApp());
@@ -9,46 +9,61 @@ class TaskManagementApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Task Management',
+      title: 'Task Management App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: TaskListScreen(),
+      home: TaskListScreen(), // The main screen of the app
     );
   }
 }
 
-class _TaskListScreenState extends State<TaskListScreen> {
-  final TextEditingController _taskController = TextEditingController();
-  List<Task> _tasks = [];
-  String _selectedPriority = 'Low'; // Default priority
+class TaskListScreen extends StatefulWidget {
+  @override
+  _TaskListScreenState createState() => _TaskListScreenState();
+}
 
+class _TaskListScreenState extends State<TaskListScreen> {
+  final List<Task> _tasks = []; // List of tasks
+  final TextEditingController _taskController = TextEditingController(); // Controller for the task input
+  String _selectedPriority = 'Medium'; // Default priority
+
+  // Method to add a new task
   void _addTask() {
-    if (_taskController.text.isNotEmpty) {
-      setState(() {
-        _tasks.add(Task(name: _taskController.text, priority: _selectedPriority));
-        _tasks.sort((a, b) => _comparePriority(a.priority, b.priority)); // Sorting tasks by priority
-        _taskController.clear();
-      });
-    }
+    if (_taskController.text.isEmpty) return;
+
+    setState(() {
+      _tasks.add(Task(
+        name: _taskController.text,
+        priority: _selectedPriority,
+      ));
+      _taskController.clear(); // Clear the text field after adding the task
+      _sortTasksByPriority(); // Sort tasks by priority
+    });
   }
 
+  // Method to toggle the completion status of a task
   void _toggleTaskCompletion(int index) {
     setState(() {
       _tasks[index].isCompleted = !_tasks[index].isCompleted;
     });
   }
 
+  // Method to delete a task
   void _deleteTask(int index) {
     setState(() {
       _tasks.removeAt(index);
     });
   }
 
+  // Method to sort tasks by priority (High, Medium, Low)
+  void _sortTasksByPriority() {
+    _tasks.sort((a, b) => _comparePriority(a.priority, b.priority));
+  }
+
   int _comparePriority(String priorityA, String priorityB) {
-    // Define priority levels
-    const priorityOrder = ['High', 'Medium', 'Low'];
-    return priorityOrder.indexOf(priorityA).compareTo(priorityOrder.indexOf(priorityB));
+    const priorities = ['High', 'Medium', 'Low'];
+    return priorities.indexOf(priorityA).compareTo(priorities.indexOf(priorityB));
   }
 
   @override
@@ -60,15 +75,18 @@ class _TaskListScreenState extends State<TaskListScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          children: [
+          children: <Widget>[
             Row(
-              children: [
+              children: <Widget>[
                 Expanded(
                   child: TextField(
                     controller: _taskController,
-                    decoration: InputDecoration(labelText: 'Enter Task'),
+                    decoration: InputDecoration(
+                      labelText: 'Enter task name',
+                    ),
                   ),
                 ),
+                SizedBox(width: 10),
                 DropdownButton<String>(
                   value: _selectedPriority,
                   onChanged: (String? newValue) {
@@ -76,14 +94,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
                       _selectedPriority = newValue!;
                     });
                   },
-                  items: ['Low', 'Medium', 'High'].map((String value) {
+                  items: <String>['High', 'Medium', 'Low']
+                      .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
                     );
                   }).toList(),
                 ),
-                SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _addTask,
                   child: Text('Add'),
@@ -92,38 +110,33 @@ class _TaskListScreenState extends State<TaskListScreen> {
             ),
             SizedBox(height: 20),
             Expanded(
-              child: _tasks.isEmpty
-                  ? Center(child: Text('No tasks added yet'))
-                  : ListView.builder(
-                      itemCount: _tasks.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          child: ListTile(
-                            leading: Checkbox(
-                              value: _tasks[index].isCompleted,
-                              onChanged: (bool? value) {
-                                _toggleTaskCompletion(index);
-                              },
-                            ),
-                            title: Text(
-                              _tasks[index].name,
-                              style: TextStyle(
-                                decoration: _tasks[index].isCompleted
-                                    ? TextDecoration.lineThrough
-                                    : TextDecoration.none,
-                              ),
-                            ),
-                            subtitle: Text('Priority: ${_tasks[index].priority}'),
-                            trailing: IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                _deleteTask(index);
-                              },
-                            ),
-                          ),
-                        );
+              child: ListView.builder(
+                itemCount: _tasks.length,
+                itemBuilder: (context, index) {
+                  final task = _tasks[index];
+                  return ListTile(
+                    leading: Checkbox(
+                      value: task.isCompleted,
+                      onChanged: (bool? value) {
+                        _toggleTaskCompletion(index);
                       },
                     ),
+                    title: Text(
+                      task.name,
+                      style: TextStyle(
+                        decoration: task.isCompleted
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                      ),
+                    ),
+                    subtitle: Text('Priority: ${task.priority}'),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () => _deleteTask(index),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

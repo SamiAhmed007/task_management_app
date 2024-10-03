@@ -3,5 +3,9 @@ class Task {
   bool isCompleted;
   String priority;
 
-  Task({required this.name, this.isCompleted = false, this.priority = 'Low'});
+  Task({
+    required this.name,
+    this.isCompleted = false,
+    required this.priority,
+  });
 }
